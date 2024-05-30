@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import passport from "passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import { router as userRouter } from "./routes/user.mjs";
 
 import './auth/local-strategy.js';
 
@@ -32,4 +33,5 @@ app.use(
 );
 
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); 
+app.use(userRouter);
