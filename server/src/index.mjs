@@ -4,6 +4,8 @@ import passport from "passport";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 
+import './auth/local-strategy.js';
+
 const PORT = process.env.PORT || 3000;
 
 mongoose
