@@ -12,6 +12,12 @@ import {
 
 export const router = new Router();
 
+router.get("/api/auth/status", (request, response) => {
+  return request.user
+    ? response.sendStatus(200)
+    : response.sendStatus(401);
+});
+
 router.post(
   "/api/auth/login",
   passport.authenticate("local"),
