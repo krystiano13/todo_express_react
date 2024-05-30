@@ -2,6 +2,7 @@ import { Router } from "express";
 import { User } from "../database/schemas/user.mjs";
 import { validationResult } from "express-validator";
 import { hashPassword } from "../auth/hash.mjs";
+import { userStatus } from "../middleware/user-status.mjs";
 import passport from "passport";
 
 import {
@@ -13,13 +14,12 @@ import {
 export const router = new Router();
 
 router.get("/api/auth/status", (request, response) => {
-  return request.user
-    ? response.sendStatus(200)
-    : response.sendStatus(401);
+  return request.user ? response.sendStatus(200) : response.sendStatus(401);
 });
 
 router.post(
   "/api/auth/login",
+  userStatus,
   passport.authenticate("local"),
   (request, response) => {
     return response.status(200).send({ message: "Logged In" });
@@ -28,6 +28,7 @@ router.post(
 
 router.post(
   "/api/auth/register",
+  userStatus,
   validateEmail,
   validateUsername,
   validatePassword,
