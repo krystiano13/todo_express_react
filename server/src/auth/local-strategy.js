@@ -25,7 +25,7 @@ export default passport.use(
 
     async (email, password, done) => {
       try {
-        const user = User.findOne({ email: email });
+        const user = await User.findOne({ email: email });
 
         if (!user) throw new Error("User not found");
         if (!comparePasswords(password, user.password))
