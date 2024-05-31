@@ -6,6 +6,7 @@ import {
   validateIsDone,
   validateTitle,
 } from "../validation/task-validation.mjs";
+import { isTaskExist, isTaskOwnerValid } from "../middleware/resolve-task.mjs";
 
 export const router = new Router();
 
@@ -65,6 +66,8 @@ router.patch(
   userLoggedIn,
   validateTitle,
   validateIsDone,
+  isTaskExist,
+  isTaskOwnerValid,
   async (request, response) => {
     if (!request.params.id) {
       return response.status(400).send({ error: "ID not found" });
@@ -76,20 +79,8 @@ router.patch(
       return response.status(400).json({ errors: result.array() });
     }
 
-    const task = await Task.findOne({ _id: request.params.id });
-
-    if (!task) {
-      return response.status(404).send({ error: "Task not found" });
-    }
-
-    if (request.session.passport.user !== task.email) {
-      return response.status(403).send({
-        message: "Unauthorized access",
-      });
-    }
-
     try {
-      const updatedTask = await task.updateOne({
+      const updatedTask = await request.task.updateOne({
         title: request.body.title,
         isDone: request.body.isDone,
       });
@@ -102,27 +93,22 @@ router.patch(
   }
 );
 
-router.delete("/api/tasks/:id", userLoggedIn, async (request, response) => {
-  if (!request.params.id) {
-    return response.status(400).send({ error: "ID not found" });
+router.delete(
+  "/api/tasks/:id",
+  userLoggedIn,
+  isTaskExist,
+  isTaskOwnerValid,
+  async (request, response) => {
+    if (!request.params.id) {
+      return response.status(400).send({ error: "ID not found" });
+    }
+    try {
+      await request.task.deleteOne();
+      return response
+        .status(201)
+        .send({ message: "Task deleted successfully" });
+    } catch (error) {
+      return response.status(500).send({ message: "Internal server error" });
+    }
   }
-
-  const task = await Task.findOne({ _id: request.params.id });
-
-  if (!task) {
-    return response.status(404).send({ error: "Task not found" });
-  }
-
-  if (request.session.passport.user !== task.email) {
-    return response.status(403).send({
-      message: "Unauthorized access",
-    });
-  }
-
-  try {
-    await task.deleteOne();
-    return response.status(201).send({ message: "Task deleted successfully" });
-  } catch (error) {
-    return response.status(500).send({ message: "Internal server error" });
-  }
-});
+);
