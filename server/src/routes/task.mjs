@@ -7,6 +7,7 @@ import {
   validateTitle,
 } from "../validation/task-validation.mjs";
 import { isTaskExist, isTaskOwnerValid } from "../middleware/resolve-task.mjs";
+import { handleErrors } from "../middleware/handle-errors.mjs";
 
 export const router = new Router();
 
@@ -14,13 +15,8 @@ router.get(
   "/api/tasks",
   userLoggedIn,
   query("email").exists().withMessage("Email is required"),
+  handleErrors,
   async (request, response) => {
-    const result = validationResult(request);
-
-    if (!result.isEmpty()) {
-      return response.status(400).json({ errors: result.array() });
-    }
-
     if (request.session.passport.user !== request.query.email) {
       return response.status(403).send({
         message: "Unauthorized access",
@@ -37,13 +33,8 @@ router.post(
   userLoggedIn,
   validateTitle,
   validateIsDone,
+  handleErrors,
   async (request, response) => {
-    const result = validationResult(request);
-
-    if (!result.isEmpty()) {
-      return response.status(400).json({ errors: result.array() });
-    }
-
     const task = new Task({
       title: request.session.passport.user,
       email: request.body.email,
@@ -68,15 +59,10 @@ router.patch(
   validateIsDone,
   isTaskExist,
   isTaskOwnerValid,
+  handleErrors,
   async (request, response) => {
     if (!request.params.id) {
       return response.status(400).send({ error: "ID not found" });
-    }
-
-    const result = validationResult(request);
-
-    if (!result.isEmpty()) {
-      return response.status(400).json({ errors: result.array() });
     }
 
     try {

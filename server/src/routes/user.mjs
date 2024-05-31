@@ -4,6 +4,7 @@ import { validationResult } from "express-validator";
 import { hashPassword } from "../auth/hash.mjs";
 import { userNotLoggedIn } from "../middleware/user-status.mjs";
 import passport from "passport";
+import { handleErrors } from "../middleware/handle-errors.mjs";
 
 import {
   validateUsername,
@@ -32,12 +33,8 @@ router.post(
   validateEmail,
   validateUsername,
   validatePassword,
+  handleErrors,
   async (request, response) => {
-    const result = validationResult(request);
-    if (!result.isEmpty()) {
-      return response.status(400).json({ errors: result.array() });
-    }
-
     const existingUser = await User.findOne({ email: request.body.email });
     if (existingUser) {
       return response.status(400).send({
