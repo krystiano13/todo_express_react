@@ -35,3 +35,8 @@ router.post(
   handleErrors,
   register
 );
+
+router.post("/api/auth/logout", (req, res) => {
+  req.logout();
+  res.sendStatus(200);
+});
