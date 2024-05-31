@@ -26,3 +26,15 @@ router.get(
     return response.status(200).send({ tasks: tasks });
   }
 );
+
+router.post(
+    '/api/tasks',
+    userLoggedIn,
+    async (request, response) => {
+        const task = new Task({
+            title: request.body.title,
+            email: request.body.email,
+            isDone: request.body.isDone
+        });
+    }
+);
