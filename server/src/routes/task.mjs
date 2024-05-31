@@ -101,3 +101,28 @@ router.patch(
     }
   }
 );
+
+router.delete("/api/tasks/:id", userLoggedIn, async (request, response) => {
+  if (!request.params.id) {
+    return response.status(400).send({ error: "ID not found" });
+  }
+
+  const task = await Task.findOne({ _id: request.params.id });
+
+  if (!task) {
+    return response.status(404).send({ error: "Task not found" });
+  }
+
+  if (request.session.passport.user !== task.email) {
+    return response.status(403).send({
+      message: "Unauthorized access",
+    });
+  }
+
+  try {
+    await task.deleteOne();
+    return response.status(201).send({ message: "Task deleted successfully" });
+  } catch (error) {
+    return response.status(500).send({ message: "Internal server error" });
+  }
+});
