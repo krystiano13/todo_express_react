@@ -13,7 +13,7 @@ import {
 
 //endpoints
 
-import { userStatus, logIn } from "./endpoints/user-endpoints.mjs";
+import { userStatus, logIn, register } from "./endpoints/user-endpoints.mjs";
 
 export const router = new Router();
 
@@ -32,5 +32,6 @@ router.post(
   validateEmail,
   validateUsername,
   validatePassword,
-  handleErrors
+  handleErrors,
+  register
 );

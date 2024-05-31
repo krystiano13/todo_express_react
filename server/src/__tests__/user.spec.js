@@ -1,8 +1,4 @@
-import {
-  userStatus,
-  logIn,
-  register,
-} from "../routes/endpoints/user-endpoints.mjs";
+import { userStatus, logIn } from "../routes/endpoints/user-endpoints.mjs";
 
 const mockRequest = {
   user: "testUser",
