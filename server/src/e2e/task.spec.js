@@ -73,6 +73,15 @@ describe("tasks", () => {
     expect(response.statusCode).toBe(201);
   });
 
+  it("should delete task", async () => {
+    const response = await createUser(app).then((res) =>
+      request(app)
+        .delete(`/api/tasks/${task_id}`)
+        .set("Cookie", res.headers["set-cookie"])
+    );
+    expect(response.statusCode).toBe(201);
+  });
+
   afterAll(async () => {
     console.log(task_id);
     await mongoose.connection.dropDatabase();
