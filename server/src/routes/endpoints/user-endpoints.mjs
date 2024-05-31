@@ -1,12 +1,13 @@
 import { User } from "../../database/schemas/user.mjs";
-import { hashPassword } from "../auth/hash.mjs";
+import { hashPassword } from "../../auth/hash.mjs";
 
 export function userStatus(request, response) {
   return request.user ? response.sendStatus(200) : response.sendStatus(401);
 }
 
 export function logIn(request, response) {
-  return response.status(200).send({ message: "Logged In" });
+  response.status(200);
+  return response.send({ message: "Logged In" });
 }
 
 export async function register(request, response) {
@@ -25,7 +26,8 @@ export async function register(request, response) {
 
   try {
     const saveUser = await user.save();
-    return response.status(200).send({
+    response.status(200);
+    return response.send({
       user: saveUser.email,
       message: "User created successfully",
     });
