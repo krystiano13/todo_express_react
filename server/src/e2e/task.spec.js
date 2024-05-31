@@ -22,6 +22,7 @@ const createUser = async (app) =>
 
 describe("tasks", () => {
   let app;
+  let task_id;
 
   beforeAll(async () => {
     mongoose
@@ -51,11 +52,29 @@ describe("tasks", () => {
           isDone: false,
         })
         .set("Cookie", res.headers["set-cookie"])
+        .then((res) => {
+          task_id = res.body.task._id;
+          return res;
+        })
     );
     expect(response.statusCode).toBe(200);
   });
 
+  it("should update task", async () => {
+    const response = await createUser(app).then((res) =>
+      request(app)
+        .patch(`/api/tasks/${task_id}`)
+        .send({
+          title: "test123",
+          isDone: true,
+        })
+        .set("Cookie", res.headers["set-cookie"])
+    );
+    expect(response.statusCode).toBe(201);
+  });
+
   afterAll(async () => {
+    console.log(task_id);
     await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
   });

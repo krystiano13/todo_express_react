@@ -13,8 +13,8 @@ export async function getTasks(request, response) {
 
 export async function createTask(request, response) {
   const task = new Task({
-    title: request.session.passport.user,
-    email: request.body.email,
+    title: request.body.title,
+    email: request.session.passport.user,
     isDone: request.body.isDone,
   });
 
