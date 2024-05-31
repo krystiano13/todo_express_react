@@ -5,7 +5,7 @@ const TaskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.String,
     required: true,
   },
-  username: {
+  email: {
     type: mongoose.Schema.Types.String,
     required: true,
   },

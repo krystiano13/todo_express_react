@@ -10,7 +10,7 @@ export function userNotLoggedIn(request, response, next) {
 
 export function userLoggedIn(request, response, next) {
   if (!request.user) {
-    return response.status(400).send({
+    return response.status(403).send({
       message: "User not logged in",
     });
   }
