@@ -6,12 +6,6 @@ export const validateTitle = body("title")
   .isString()
   .withMessage("Title must be a string");
 
-export const validateEmail = body("email")
-  .exists()
-  .withMessage("Email is required")
-  .isEmail()
-  .withMessage("Invalid email");
-
 export const validateIsDone = body("isDone")
   .exists()
   .withMessage("isDone is required")

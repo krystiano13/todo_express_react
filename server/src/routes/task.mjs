@@ -3,7 +3,6 @@ import { userLoggedIn } from "../middleware/user-status.mjs";
 import { query, validationResult } from "express-validator";
 import { Task } from "../database/schemas/task.mjs";
 import {
-  validateEmail,
   validateIsDone,
   validateTitle,
 } from "../validation/task-validation.mjs";
@@ -36,7 +35,6 @@ router.post(
   "/api/tasks",
   userLoggedIn,
   validateTitle,
-  validateEmail,
   validateIsDone,
   async (request, response) => {
     const result = validationResult(request);
@@ -46,7 +44,7 @@ router.post(
     }
 
     const task = new Task({
-      title: request.body.title,
+      title: request.session.passport.user,
       email: request.body.email,
       isDone: request.body.isDone,
     });
@@ -61,3 +59,5 @@ router.post(
     }
   }
 );
+
+router.patch("/api/tasks", userLoggedIn);
