@@ -2,6 +2,11 @@ import { Router } from "express";
 import { userLoggedIn } from "../middleware/user-status.mjs";
 import { query, validationResult } from "express-validator";
 import { Task } from "../database/schemas/task.mjs";
+import {
+  validateEmail,
+  validateIsDone,
+  validateTitle,
+} from "../validation/task-validation.mjs";
 
 export const router = new Router();
 
@@ -28,13 +33,31 @@ router.get(
 );
 
 router.post(
-    '/api/tasks',
-    userLoggedIn,
-    async (request, response) => {
-        const task = new Task({
-            title: request.body.title,
-            email: request.body.email,
-            isDone: request.body.isDone
-        });
+  "/api/tasks",
+  userLoggedIn,
+  validateTitle,
+  validateEmail,
+  validateIsDone,
+  async (request, response) => {
+    const result = validationResult(request);
+
+    if (!result.isEmpty()) {
+      return response.status(400).json({ errors: result.array() });
     }
+
+    const task = new Task({
+      title: request.body.title,
+      email: request.body.email,
+      isDone: request.body.isDone,
+    });
+
+    try {
+      const saveTask = await task.save();
+      return response
+        .status(200)
+        .send({ message: "Task created successfully", task: saveTask });
+    } catch (error) {
+      return response.status(500).send({ message: "Internal server error" });
+    }
+  }
 );
