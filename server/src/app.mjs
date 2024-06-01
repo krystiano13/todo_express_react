@@ -12,17 +12,8 @@ import "./auth/local-strategy.js";
 export function createApp() {
   const app = express();
 
-  app.use(
-    cors({
-      origin: "http://localhost:5173",
-      preflightContinue: true,
-      credentials: true,
-    })
-  );
-
-  app.use(cookieParser());
-
   app.use(express.json());
+  app.use(cookieParser());
   app.use(
     session({
       secret: "keyboard cat",
@@ -38,8 +29,18 @@ export function createApp() {
     })
   );
 
+  app.use(
+    cors({
+      origin: "http://localhost:5173",
+      methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+      credentials: true,
+    })
+  );
+
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(passport.authenticate("session"));
+
   app.use(userRouter);
   app.use(taskRouter);
 

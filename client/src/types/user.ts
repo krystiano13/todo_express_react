@@ -1,9 +1,14 @@
 export interface User {
   email: string;
-  username: string;
 }
 
 export interface UserContext {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  User: {
+    user: User | null;
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  };
+  LoggedIn: {
+    loggedIn: boolean;
+    setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 }

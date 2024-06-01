@@ -2,7 +2,9 @@ import { User } from "../../database/schemas/user.mjs";
 import { hashPassword } from "../../auth/hash.mjs";
 
 export function userStatus(request, response) {
-  return request.user ? response.sendStatus(200) : response.sendStatus(401);
+  return request.user
+    ? response.status(200).send({ user: request.session.passport.user })
+    : response.status(401).send({ error: "User not logged in" });
 }
 
 export function logIn(request, response) {

@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router";
+
 export function Login() {
+  const navigate = useNavigate();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = await new FormData(e.target as HTMLFormElement);
@@ -15,9 +18,11 @@ export function Login() {
       }),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data));
-
-    console.log(document.cookie);
+      .then((data) => {
+        if (data.message) {
+          navigate("/");
+        }
+      });
   }
 
   return (

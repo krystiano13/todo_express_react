@@ -1,35 +1,34 @@
 import { NavLink } from "react-router-dom";
-import { useEffect, useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 
-import '../styles/Navbar.css';
+import "../styles/Navbar.css";
 
 export function Navbar() {
-  const [loggedIn, setLoggedIn] = useState(false);
   const userContext = useContext(UserContext);
 
   useEffect(() => {
-    if (userContext.user) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
+    if (!userContext.LoggedIn.loggedIn) {
+      userContext.LoggedIn.setLoggedIn(false);
     }
-  }, [userContext.user]);
+  }, [userContext.LoggedIn.loggedIn]);
 
   return (
     <nav className="w-[100vw] fixed p-4 flex justify-start items-center gap-10 form-shadow">
       <NavLink to="/">Home</NavLink>
-      {!loggedIn && (
+      {!userContext.LoggedIn.loggedIn && (
         <>
           <NavLink to="/login">Login</NavLink>
           <NavLink to="/register">Register</NavLink>
         </>
       )}
 
-      {loggedIn && (
+      {userContext.LoggedIn.loggedIn && (
         <>
           <p>
-            {userContext.user !== null ? userContext.user.username : "Guest"}
+            {userContext.User.user !== null
+              ? userContext.User.user.email
+              : "Guest"}
           </p>
           <NavLink to="/logout">Logout</NavLink>
         </>
