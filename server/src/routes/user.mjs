@@ -37,6 +37,10 @@ router.post(
 );
 
 router.post("/api/auth/logout", (req, res) => {
-  req.logout();
-  res.sendStatus(200);
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
 });
