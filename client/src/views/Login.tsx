@@ -1,10 +1,13 @@
 import { useNavigate } from "react-router";
+import { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
 
 export function Login() {
   const navigate = useNavigate();
+  const userContext = useContext(UserContext);
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = await new FormData(e.target as HTMLFormElement);
+    const formData = await new FormData(e.target as HTMLFormElement);
 
     await fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
@@ -13,13 +16,15 @@ export function Login() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: data.get("email"),
-        password: data.get("password"),
+        email: formData.get("email"),
+        password: formData.get("password"),
       }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.message) {
+          userContext.User.setUser({ email: formData.get("email") as string });
+          userContext.LoggedIn.setLoggedIn(true);
           navigate("/");
         }
       });

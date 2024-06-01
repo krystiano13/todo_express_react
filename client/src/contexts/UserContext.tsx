@@ -37,7 +37,7 @@ export function UserContextProvider({
           setLoggedIn(true);
         }
       });
-  }, [user, loggedIn]);
+  }, []);
 
   return (
     <UserContext.Provider
