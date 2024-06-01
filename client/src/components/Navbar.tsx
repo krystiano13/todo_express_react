@@ -2,6 +2,8 @@ import { NavLink } from "react-router-dom";
 import { useEffect, useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 
+import '../styles/Navbar.css';
+
 export function Navbar() {
   const [loggedIn, setLoggedIn] = useState(false);
   const userContext = useContext(UserContext);
@@ -15,7 +17,7 @@ export function Navbar() {
   }, [userContext.user]);
 
   return (
-    <nav className="w-[100vw] fixed p-4 flex justify-start items-center gap-8 form-shadow">
+    <nav className="w-[100vw] fixed p-4 flex justify-start items-center gap-10 form-shadow">
       <NavLink to="/">Home</NavLink>
       {!loggedIn && (
         <>
