@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.form-shadow {
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.input-shadow {
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
+}
+
+.input-shadow:hover {
+  box-shadow: rgba(14, 173, 120, 0.226) 0px 2px 4px;
+}
+
+.form-appear {
+  animation: formAppear 0.4s;
+}
+
+@keyframes formAppear {
+  from {
+    transform: translateY(250px) scale(.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0px) scale(1);
+    opacity: 1;
+  }
+}

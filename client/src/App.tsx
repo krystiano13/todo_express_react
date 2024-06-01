@@ -5,12 +5,14 @@ import { Register } from "./views/Register";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </BrowserRouter>
+    <main className="w-[100vw] h-[100vh] bg-slate-50">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </BrowserRouter>
+    </main>
   );
 }
