@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 export function Register() {
   return (
     <div className="w-full h-full flex justify-center items-center">
@@ -29,6 +31,12 @@ export function Register() {
         >
           Create Account
         </button>
+        <NavLink
+          className="hover:text-emerald-500 transition-colors"
+          to="/login"
+        >
+          Already have an account?
+        </NavLink>
       </form>
     </div>
   );

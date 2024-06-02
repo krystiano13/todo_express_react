@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router";
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { NavLink } from "react-router-dom";
 
 export function Login() {
   const navigate = useNavigate();
@@ -56,6 +57,12 @@ export function Login() {
         >
           Log In
         </button>
+        <NavLink
+          className="hover:text-emerald-500 transition-colors"
+          to="/register"
+        >
+          Don't have an account ?
+        </NavLink>
       </form>
     </div>
   );
