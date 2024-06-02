@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { NavLink } from "react-router-dom";
 import { authorized } from "../utils/auth";
@@ -10,9 +10,13 @@ export function Login() {
 
   useEffect(() => authorized(userContext, () => navigate("/")), []);
 
+  const [errors, setErrors] = useState<string[]>([]);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = await new FormData(e.target as HTMLFormElement);
+
+    setErrors([]);
 
     await fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
@@ -25,7 +29,13 @@ export function Login() {
         password: formData.get("password"),
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 200) {
+          return res.json();
+        } else {
+          setErrors(["Wrong Credentials"]);
+        }
+      })
       .then((data) => {
         if (data.message) {
           userContext.User.setUser({ email: formData.get("email") as string });
@@ -67,6 +77,9 @@ export function Login() {
         >
           Don't have an account ?
         </NavLink>
+        {errors.map((item) => (
+          <p className="text-center text-red-500">{item}</p>
+        ))}
       </form>
     </div>
   );
