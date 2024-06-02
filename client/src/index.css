@@ -6,6 +6,10 @@
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 }
 
+.section-shadow {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
 .input-shadow {
   box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
 }
