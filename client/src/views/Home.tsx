@@ -1,15 +1,14 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
+import { unauthorized } from "../utils/auth";
 
 export function Home() {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
 
   useEffect(() => {
-    if (!userContext.LoggedIn.loggedIn) {
-      navigate("/login");
-    }
+    unauthorized(userContext, () => navigate("/login"));
   }, []);
 
   return <></>;

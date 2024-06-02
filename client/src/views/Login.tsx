@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { NavLink } from "react-router-dom";
+import { authorized } from "../utils/auth";
 
 export function Login() {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
+
+  useEffect(() => authorized(userContext, () => navigate("/")), []);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = await new FormData(e.target as HTMLFormElement);

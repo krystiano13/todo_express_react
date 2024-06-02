@@ -1,6 +1,13 @@
 import { NavLink } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { authorized } from "../utils/auth";
+import { useNavigate } from "react-router";
 
 export function Register() {
+  const navigate = useNavigate();
+  const userContext = useContext(UserContext);
+  useEffect(() => authorized(userContext, () => navigate("/")), []);
   return (
     <div className="w-full h-full flex justify-center items-center">
       <form className="form-appear flex flex-col items-center gap-10 pt-16 pb-16 pl-8 pr-8 bg-white form-shadow">
