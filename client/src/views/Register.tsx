@@ -1,13 +1,16 @@
 import { NavLink } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { authorized } from "../utils/auth";
 import { useNavigate } from "react-router";
+import type { AuthError } from "../types/user";
 
 export function Register() {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
   useEffect(() => authorized(userContext, () => navigate("/")), []);
+
+  const [errors, setErrors] = useState<AuthError[]>([]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,7 +35,20 @@ export function Register() {
         }
       })
       .then((data) => {
-        console.log(data);
+        if (data.errors) {
+          const errorsArray: AuthError[] = [];
+          data.errors.forEach((item: AuthError) => {
+            errorsArray.push(item);
+          });
+
+          setErrors(errorsArray);
+        }
+
+        if (data.error) {
+          setErrors([
+            { location: "", msg: data.error, type: "", value: "", path: "" },
+          ]);
+        }
       });
   }
 
@@ -75,6 +91,9 @@ export function Register() {
         >
           Already have an account?
         </NavLink>
+        {errors.map((item) => (
+          <p className="text-center text-red-500">{item.msg}</p>
+        ))}
       </form>
     </div>
   );

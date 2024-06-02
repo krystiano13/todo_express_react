@@ -16,7 +16,7 @@ export async function register(request, response) {
   const existingUser = await User.findOne({ email: request.body.email });
   if (existingUser) {
     return response.status(400).send({
-      message: "User already exists",
+      error: "User already exists",
     });
   }
 

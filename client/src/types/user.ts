@@ -12,3 +12,11 @@ export interface UserContext {
     setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   };
 }
+
+export interface AuthError {
+  location: string;
+  msg: string;
+  type: string;
+  value: string;
+  path: string;
+}
