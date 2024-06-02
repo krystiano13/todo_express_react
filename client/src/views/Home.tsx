@@ -9,6 +9,23 @@ export function Home() {
 
   useEffect(() => {
     unauthorized(userContext, () => navigate("/login"));
+
+    if (!userContext.User.user) return;
+    
+    fetch(
+      `http://localhost:3000/api/tasks?email=${userContext.User.user.email}`,
+      {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
   }, []);
 
   return (

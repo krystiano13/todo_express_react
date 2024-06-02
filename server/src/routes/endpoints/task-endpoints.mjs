@@ -2,6 +2,7 @@ import { Task } from "../../database/schemas/task.mjs";
 
 export async function getTasks(request, response) {
   if (request.session.passport.user !== request.query.email) {
+    console.log(request.query);
     return response.status(403).send({
       message: "Unauthorized access",
     });
