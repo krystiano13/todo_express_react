@@ -11,17 +11,17 @@ import { Navbar } from "./components/Navbar";
 
 export default function App() {
   return (
-    <UserContextProvider>
-      <main className="w-[100vw] h-[100vh] bg-slate-50">
-        <BrowserRouter>
+    <BrowserRouter>
+      <UserContextProvider>
+        <main className="w-[100vw] h-[100vh] bg-slate-50">
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
           </Routes>
-        </BrowserRouter>
-      </main>
-    </UserContextProvider>
+        </main>
+      </UserContextProvider>
+    </BrowserRouter>
   );
 }

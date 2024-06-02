@@ -1,17 +1,13 @@
-import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { unauthorized } from "../utils/auth";
 
 export function Home() {
-  const navigate = useNavigate();
   const userContext = useContext(UserContext);
+  const [tasks, setTasks] = useState<{ title: string; isDone: boolean }[]>([]);
 
   useEffect(() => {
-    unauthorized(userContext, () => navigate("/login"));
-
     if (!userContext.User.user) return;
-    
+
     fetch(
       `http://localhost:3000/api/tasks?email=${userContext.User.user.email}`,
       {
@@ -24,7 +20,17 @@ export function Home() {
     )
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        if (data.tasks) {
+          const tasksArray: { title: string; isDone: boolean }[] = [];
+          data.tasks.forEach((item: { title: string; isDone: boolean }) => {
+            tasksArray.push({
+              title: item.title,
+              isDone: item.isDone,
+            });
+          });
+
+          setTasks(tasksArray);
+        }
       });
   }, []);
 
@@ -47,17 +53,25 @@ export function Home() {
           </button>
         </form>
         <div className="p-2 flex flex-col items-center justify-start gap-1 overflow-y-auto min-h-[80%] max-h-[80%]">
-          <div className="task bg-slate-50 w-full flex items-center justify-between form-shadow p-3">
-            <p className="overflow-x-auto text-sm">Task 1</p>
-            <section className="flex items-center gap-3">
-              <button className="text-sm p-1 pl-4 pr-4 text-white bg-emerald-500 hover:bg-emerald-400 transition">
-                Done
-              </button>
-              <button className="text-sm p-1 pl-4 pr-4 text-white bg-red-500 hover:bg-red-400 transition">
-                Delete
-              </button>
-            </section>
-          </div>
+          {tasks.map((item) => (
+            <div className="task bg-slate-50 w-full flex items-center justify-between form-shadow p-3">
+              <p
+                className={`overflow-x-auto text-sm ${
+                  item.isDone ? "line-through" : ""
+                }`}
+              >
+                {item.title}
+              </p>
+              <section className="flex items-center gap-3">
+                <button className="text-sm p-1 pl-4 pr-4 text-white bg-emerald-500 hover:bg-emerald-400 transition">
+                  Done
+                </button>
+                <button className="text-sm p-1 pl-4 pr-4 text-white bg-red-500 hover:bg-red-400 transition">
+                  Delete
+                </button>
+              </section>
+            </div>
+          ))}
         </div>
       </section>
     </div>

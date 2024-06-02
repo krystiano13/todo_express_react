@@ -1,5 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import type { UserContext as User, User as UserType } from "../types/user";
+import { useNavigate } from "react-router";
+import { unauthorized } from "../utils/auth";
 
 export const UserContext = createContext<User>({
   User: {
@@ -19,6 +21,7 @@ export function UserContextProvider({
 }) {
   const [user, setUser] = useState<UserType | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:3000/api/auth/status", {
@@ -36,6 +39,14 @@ export function UserContextProvider({
           setUser({ email: data.user });
           setLoggedIn(true);
         }
+
+        unauthorized(
+          {
+            User: { user: user, setUser: setUser },
+            LoggedIn: { loggedIn: loggedIn, setLoggedIn: setLoggedIn },
+          },
+          () => navigate("/login")
+        );
       });
   }, []);
 
