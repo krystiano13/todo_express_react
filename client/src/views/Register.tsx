@@ -8,9 +8,40 @@ export function Register() {
   const navigate = useNavigate();
   const userContext = useContext(UserContext);
   useEffect(() => authorized(userContext, () => navigate("/")), []);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = await new FormData(e.target as HTMLFormElement);
+    await fetch("http://localhost:3000/api/auth/register", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: formData.get("email"),
+        username: formData.get("username"),
+        password: formData.get("password"),
+      }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          navigate("/login");
+        } else {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+      });
+  }
+
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <form className="form-appear flex flex-col items-center gap-10 pt-16 pb-16 pl-8 pr-8 bg-white form-shadow">
+      <form
+        onSubmit={handleSubmit}
+        className="form-appear flex flex-col items-center gap-10 pt-16 pb-16 pl-8 pr-8 bg-white form-shadow"
+      >
         <input
           className="outline-0 input-shadow p-2 min-w-72 transition-all"
           type="email"
