@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
+import { getTasks } from "../utils/tasks";
 
 export function Home() {
   const userContext = useContext(UserContext);
@@ -7,31 +8,7 @@ export function Home() {
 
   useEffect(() => {
     if (!userContext.User.user) return;
-
-    fetch(
-      `http://localhost:3000/api/tasks?email=${userContext.User.user.email}`,
-      {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.tasks) {
-          const tasksArray: { title: string; isDone: boolean }[] = [];
-          data.tasks.forEach((item: { title: string; isDone: boolean }) => {
-            tasksArray.push({
-              title: item.title,
-              isDone: item.isDone,
-            });
-          });
-
-          setTasks(tasksArray);
-        }
-      });
+    getTasks(userContext, setTasks);
   }, []);
 
   return (
