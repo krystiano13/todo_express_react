@@ -103,3 +103,30 @@ export function deleteTask(
     }
   });
 }
+
+export function finishTask(
+  id: string,
+  userContext: UserContext,
+  tasks: { _id: string; title: string; isDone: boolean }[],
+  setTasks: (tasks: { _id: string; title: string; isDone: boolean }[]) => void,
+  title: string
+) {
+  if (!userContext.User.user) return;
+  fetch(`http://localhost:3000/api/tasks/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: title,
+      isDone: true,
+    }),
+  }).then((res) => {
+    if (res.status === 201) {
+      getTasks(userContext, setTasks);
+    } else {
+      alert("Internal server error");
+    }
+  });
+}

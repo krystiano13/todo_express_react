@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { getTasks, addTask, deleteTask } from "../utils/tasks";
+import { getTasks, addTask, deleteTask, finishTask } from "../utils/tasks";
 
 export function Home() {
   const userContext = useContext(UserContext);
@@ -50,7 +50,18 @@ export function Home() {
                 {item.title}
               </p>
               <section className="flex items-center gap-3">
-                <button className="text-sm p-1 pl-4 pr-4 text-white bg-emerald-500 hover:bg-emerald-400 transition">
+                <button
+                  onClick={() =>
+                    finishTask(
+                      item._id,
+                      userContext,
+                      tasks,
+                      setTasks,
+                      item.title
+                    )
+                  }
+                  className="text-sm p-1 pl-4 pr-4 text-white bg-emerald-500 hover:bg-emerald-400 transition"
+                >
                   Done
                 </button>
                 <button
