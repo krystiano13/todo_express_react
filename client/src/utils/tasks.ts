@@ -2,7 +2,7 @@ import type { UserContext } from "../types/user";
 
 export function getTasks(
   userContext: UserContext,
-  setTasks: (tasks: { title: string; isDone: boolean }[]) => void
+  setTasks: (tasks: { _id: string; title: string; isDone: boolean }[]) => void
 ) {
   if (!userContext.User.user) return;
 
@@ -18,14 +18,19 @@ export function getTasks(
   )
     .then((res) => res.json())
     .then((data) => {
+      console.log(data);
       if (data.tasks) {
-        const tasksArray: { title: string; isDone: boolean }[] = [];
-        data.tasks.forEach((item: { title: string; isDone: boolean }) => {
-          tasksArray.push({
-            title: item.title,
-            isDone: item.isDone,
-          });
-        });
+        const tasksArray: { _id: string; title: string; isDone: boolean }[] =
+          [];
+        data.tasks.forEach(
+          (item: { _id: string; title: string; isDone: boolean }) => {
+            tasksArray.push({
+              _id: item._id,
+              title: item.title,
+              isDone: item.isDone,
+            });
+          }
+        );
 
         setTasks(tasksArray);
       }
@@ -35,8 +40,8 @@ export function getTasks(
 export function addTask(
   e: React.FormEvent<HTMLFormElement>,
   userContext: UserContext,
-  tasks: { title: string; isDone: boolean }[],
-  setTasks: (tasks: { title: string; isDone: boolean }[]) => void
+  tasks: { _id: string; title: string; isDone: boolean }[],
+  setTasks: (tasks: { _id: string; title: string; isDone: boolean }[]) => void
 ) {
   e.preventDefault();
 
@@ -70,4 +75,31 @@ export function addTask(
         e.target.children[0].value = "";
       }
     });
+}
+
+export function deleteTask(
+  id: string,
+  userContext: UserContext,
+  tasks: { _id: string; title: string; isDone: boolean }[],
+  setTasks: (tasks: { _id: string; title: string; isDone: boolean }[]) => void
+) {
+  if (!userContext.User.user) return;
+  fetch(`http://localhost:3000/api/tasks/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((res) => {
+    if (res.status === 500) {
+      alert("Internal server error");
+    } else if (res.status === 400) {
+      alert("Task not found");
+    }
+
+    if (res.status === 201) {
+      const newTasks = tasks.filter((item) => item._id !== id);
+      setTasks(newTasks);
+    }
+  });
 }

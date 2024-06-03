@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
-import { getTasks, addTask } from "../utils/tasks";
+import { getTasks, addTask, deleteTask } from "../utils/tasks";
 
 export function Home() {
   const userContext = useContext(UserContext);
-  const [tasks, setTasks] = useState<{ title: string; isDone: boolean }[]>([]);
+  const [tasks, setTasks] = useState<
+    { _id: string; title: string; isDone: boolean }[]
+  >([]);
 
   useEffect(() => {
     if (!userContext.User.user) return;
@@ -35,7 +37,11 @@ export function Home() {
         </form>
         <div className="p-2 flex flex-col items-center justify-start gap-1 overflow-y-auto min-h-[80%] max-h-[80%]">
           {tasks.map((item) => (
-            <div className="task bg-slate-50 w-full flex items-center justify-between form-shadow p-3">
+            <div
+              key={item._id}
+              id={item._id}
+              className="task bg-slate-50 w-full flex items-center justify-between form-shadow p-3"
+            >
               <p
                 className={`overflow-x-auto text-sm ${
                   item.isDone ? "line-through" : ""
@@ -47,7 +53,12 @@ export function Home() {
                 <button className="text-sm p-1 pl-4 pr-4 text-white bg-emerald-500 hover:bg-emerald-400 transition">
                   Done
                 </button>
-                <button className="text-sm p-1 pl-4 pr-4 text-white bg-red-500 hover:bg-red-400 transition">
+                <button
+                  onClick={() =>
+                    deleteTask(item._id, userContext, tasks, setTasks)
+                  }
+                  className="text-sm p-1 pl-4 pr-4 text-white bg-red-500 hover:bg-red-400 transition"
+                >
                   Delete
                 </button>
               </section>
